@@ -2,19 +2,19 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 	<!-- 数据库   -->
-	<entry key="jdbc.url">jdbc:mysql://localhost:3306/school?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull</entry>
-	<entry key="jdbc.username">root</entry>
-	<entry key="jdbc.password">db123</entry>
+	<entry key="jdbc.url">jdbc:mysql://eajadmindb.mysql.rds.aliyuncs.com:3360/test?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull</entry>
+	<entry key="jdbc.username">eajdb</entry>
+	<entry key="jdbc.password">51EajcomDB@#$%</entry>
 	<entry key="jdbc.show_sql">true</entry>
 	 
-	<!-- redis数据库 -->
+	<!-- redis数据库 
 	<entry key="redis.host">192.168.88.40</entry>
 	<entry key="redis.port">6379</entry>
 	<entry key="redis.pass"></entry>
 	<entry key="redis.dbIndex">10</entry>
 	<entry key="redis.timeout">36000</entry>
 	<entry key="session.timeout">36000</entry>
-	
+	-->
 	<!--mongoDB连接配置  
 	<entry key="mongo.hostport">192.168.88.40:27017</entry>
 	<entry key="mongo.connectionsPerHost">8</entry>
@@ -32,7 +32,7 @@
 	<!-- 上传文件服务 -->
 	<entry key="resource.url.base">http://localhost:8080/backend/</entry>
 	<!-- 文件地址路径 -->
-	<entry key="file.path">d:\\warmhome</entry>
+	<entry key="file.path">d:\\work\\file</entry>
 	<!-- 苹果推送证书 -->
 	<entry key="ios.push.product.flag">N</entry>
 
@@ -41,11 +41,11 @@
 	<entry key="pns.masterSecret">8ade73f46550054c1fce64ce</entry>
 
 	<!-- 微信支付 -->
-	<entry key="wxpay.app_certDir">d:\\install\\wx_app</entry>
+	<entry key="wxpay.app_certDir">d:\\work\\file\\wx_app</entry>
 	<entry key="wxpay.notify_url">http://oyhf521.vicp.net:8181/backend/ws/wxpay/payReply</entry>
 
 	<!-- 支付宝 -->
-	<entry key="ali.pay.certDir">d:\\install\\ali_app</entry>
+	<entry key="ali.pay.certDir">d:\\work\\file\\ali_app</entry>
 	<entry key="ali.pay.notifyUrl">http://oyhf521.vicp.net:8181/backend/ws/alipay/payReply</entry>
 
 	<!-- 威富通 -->

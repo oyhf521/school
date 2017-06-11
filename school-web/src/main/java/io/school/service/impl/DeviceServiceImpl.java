@@ -42,7 +42,9 @@ public class DeviceServiceImpl implements DeviceService {
 	public int queryTotal(Map<String, Object> map) {
 		return deviceDao.queryTotal(map);
 	}
-
+	/**
+	 * 2）新增
+	 */
 	@Override
 	public void save(DeviceEntity device) {
 		try {
@@ -63,6 +65,7 @@ public class DeviceServiceImpl implements DeviceService {
 				paracode += entry.getKey() + ",";
 				paraname += entry.getValue() + ",";
 			}
+			device.setStatus(Devicepara.run);
 			device.setParaname(paraname);
 			device.setParacode(paracode);
 			device.setLatetime(new Date());
@@ -98,7 +101,9 @@ public class DeviceServiceImpl implements DeviceService {
 			e.printStackTrace();
 		}
 	}
-
+	/**
+	 * 3）修改
+	 */
 	@Override
 	public void update(DeviceEntity device) {
 		String isdouble = device.getIsdouble();
@@ -122,6 +127,18 @@ public class DeviceServiceImpl implements DeviceService {
 		device.setParacode(paracode);
 		deviceDao.update(device);
 	}
+	/**
+	 *换表
+	 */
+	@Override
+	public void updateChange(DeviceEntity device) {
+		String newcode = device.getNewcode();
+		
+		
+		
+		device.setCode(newcode);
+		deviceDao.update(device);
+	}
 
 	@Override
 	public void delete(Integer id) {
@@ -132,7 +149,9 @@ public class DeviceServiceImpl implements DeviceService {
 	public void deleteBatch(Integer[] ids) {
 		deviceDao.deleteBatch(ids);
 	}
-
+	/**
+	 * 7）电价设置
+	 */
 	@Override
 	public void updatePrice(String price, String isover, String build, String roomIds, String buildingIds) {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -142,7 +161,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		} else {
 			roomIds = roomIds.replaceAll("_room", "");
-			System.out.println(roomIds);
+
 			map.put("roomIds", roomIds);
 		}
 		List<DeviceEntity> list = deviceDao.queryList(map);
@@ -155,7 +174,9 @@ public class DeviceServiceImpl implements DeviceService {
 
 		}
 	}
-
+	/**
+	 * 8）用电规则设置
+	 */
 	@Override
 	public void updateRule(String ruleId, String build, String roomIds, String buildingIds) {
 
@@ -166,7 +187,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		} else {
 			roomIds = roomIds.replaceAll("_room", "");
-			System.out.println(roomIds);
+
 			map.put("roomIds", roomIds);
 		}
 		List<DeviceEntity> list = deviceDao.queryList(map);
@@ -177,53 +198,86 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 
 		}
-		
+
 	}
+	/**
+	 * 9）强制设定(可用电量)
+	 */
 	@Override
-	public void updateFree(String free,String remarks, String build, String roomIds, String buildingIds) {
-		
+	public void updateFree(String free, String remarks, String build, String roomIds, String buildingIds) {
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		if ("Y".equals(build))// 按照楼栋
 		{
 			map.put("buildingIds", buildingIds);
-			
+
 		} else {
 			roomIds = roomIds.replaceAll("_room", "");
-			System.out.println(roomIds);
+
 			map.put("roomIds", roomIds);
 		}
 		List<DeviceEntity> list = deviceDao.queryList(map);
 		if (CollectionUtils.isNotEmpty(list)) {
 			for (DeviceEntity device : list) {
-			//	device.setRuleid(StringUtil.getInt(ruleId));
+				BigDecimal freeuse = device.getFreeuse();
+
+				DevicekwhEntity kwh = new DevicekwhEntity();
+				// 房间ID
+				kwh.setRoomid(device.getRoomid());
+				// 电表ID
+				kwh.setDeviceid(device.getId());
+				// 电表名称
+				kwh.setDevicename(device.getName());
+				// 电表号
+				kwh.setDevicecode(device.getCode());
+				// 操作类型
+				kwh.setOptype(OpTypeEnum.qz.getValue());
+				// 操作前（可用电量）
+				kwh.setBefkwh(freeuse);
+				// 增减数
+				kwh.setChangekwh(new BigDecimal(free).subtract(freeuse));
+				// 操作后（可用电量）
+				kwh.setAftkwh(new BigDecimal(free));
+				// 操作人
+				kwh.setOpuse(ShiroUtils.getUserEntity().getUsername());
+				// 操作时间
+				kwh.setOptime(new Date());
+				// 备注
+				kwh.setRemarks(remarks);
+
+				devicekwhDao.save(kwh);
+				device.setFreeuse(new BigDecimal(free));
+				device.setRemarks(remarks);
 				deviceDao.update(device);
 			}
-			
+
 		}
-		
+
 	}
+	/**
+	 * 10）手动停/通电
+	 */
 	@Override
-	public void updateRunStop(String run, String build, String roomIds, String buildingIds) {
-		
+	public void updateRunStop(String status, String build, String roomIds, String buildingIds) {
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		if ("Y".equals(build))// 按照楼栋
 		{
 			map.put("buildingIds", buildingIds);
-			
+
 		} else {
 			roomIds = roomIds.replaceAll("_room", "");
-			System.out.println(roomIds);
 			map.put("roomIds", roomIds);
 		}
 		List<DeviceEntity> list = deviceDao.queryList(map);
 		if (CollectionUtils.isNotEmpty(list)) {
 			for (DeviceEntity device : list) {
-			//	device.setRuleid(StringUtil.getInt(ruleId));
+				 device.setStatus(status);
 				deviceDao.update(device);
 			}
-			
+
 		}
-		
+
 	}
 
 }

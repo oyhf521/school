@@ -34,5 +34,7 @@ public interface DeviceService {
 
 	void updateFree(String free, String remarks, String build, String roomIds, String buildingIds);
 
-	void updateRunStop(String run, String build, String roomIds, String buildingIds);
+	void updateRunStop(String status, String build, String roomIds, String buildingIds);
+
+	void updateChange(DeviceEntity device);
 }

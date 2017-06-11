@@ -26,5 +26,6 @@ public class Devicepara {
 		doubleMap.put("viceKW", "副线功率");
 		doubleMap.put("viceKWh", "副线电量");
 	}
-
+	public static String run = "01"; //通电
+	public static String stop = "02"; // 停电
 }

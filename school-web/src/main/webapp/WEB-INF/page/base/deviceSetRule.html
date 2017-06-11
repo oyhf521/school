@@ -18,7 +18,7 @@
 				<div class="form-group">
 					<div class="col-sm-2 control-label">楼栋房间</div>
 					<div class="col-sm-10">
-						<div class="col-sm-10">
+						<div class="col-sm-10" id="buildDiv">
 							<label class="radio-inline"> <input type="radio" name="build" onchange="clickRadio(1)" checked="checked" value="Y" /> 按楼栋
 							</label> <label class="radio-inline"> <input type="radio" onchange="clickRadio(2)" name="build" value="N" /> 按房间
 							</label>
@@ -99,6 +99,13 @@
 			var build = $("input[name='build']:checked").val();
 			var roomIds = $('#roomId').combotree('getValues');
 			var buildingIds = $('#buildingId').combotree('getValues');
+			
+			if ((buildingIds == '' || buildingIds == null)&&(roomIds == '' || roomIds == null)) {
+				tips("请至少选择一个楼栋或者房间！", '#buildDiv');
+				return false;
+
+			}
+			
 			console.log("build=" + build + "&ruleId=" + ruleId + "&roomIds=" + roomIds + "&buildingIds=" + buildingIds);
 			if (ruleId == '' || ruleId == null)
 			{

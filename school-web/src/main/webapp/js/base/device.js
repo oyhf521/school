@@ -8,7 +8,12 @@ $(function () {
 			{ label: '房间', name: 'room.name',   width: 80 }, 			
 			{ label: '用电规则', name: 'rule.name',   width: 80 }, 			
 			{ label: '电表名称', name: 'name', index: 'name', width: 80 }, 			
-			{ label: '电表号', name: 'code', index: 'code', width: 80 }, 			
+			{ label: '电表号', name: 'code', index: 'code', width: 80 }, 	
+			{ label: '状态', name: 'status',  width: 80, formatter: function(value, options, row){
+				return value === '01' ? 
+					'<span class="label label-success">通电</span>' : 
+					'<span class="label label-danger">停电</span>';
+			}},
 			{ label: '电价', name: 'price', index: 'price', width: 80 }, 			
 			{ label: '是否允许欠费', name: 'isover',  width: 80, formatter: function(value, options, row){
 				return value === 'Y' ? 
@@ -81,8 +86,15 @@ var vm = new Vue({
 			}
 			location.href = "deviceUpdate.html?deviceid="+id;
 		},
+		setChange: function (event) {
+			var id = getSelectedRow();
+			if(id == null){
+				return ;
+			}
+			location.href = "deviceChange.html?deviceid="+id;
+		},
 		setPrice: function (event) {
-			location.href = "deviceSetUpdate.html?";
+			location.href = "deviceSetPrice.html?";
 		},
 		setRule: function (event) {
 			location.href = "deviceSetRule.html?";

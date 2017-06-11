@@ -16,7 +16,7 @@
 				#if($shiro.hasPermission("device:save")) <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a> #end
 				#if($shiro.hasPermission("device:update")) <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a> #end
 				#if($shiro.hasPermission("device:delete")) <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a> #end
-				#if($shiro.hasPermission("device:delete")) <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;换表</a> #end
+				#if($shiro.hasPermission("device:delete")) <a class="btn btn-primary" @click="setChange"><i class="fa fa-trash-o"></i>&nbsp;换表</a> #end
 				#if($shiro.hasPermission("device:delete")) <a class="btn btn-primary" @click="setPrice"><i class="fa fa-trash-o"></i>&nbsp;电价设置</a> #end
 				#if($shiro.hasPermission("device:delete")) <a class="btn btn-primary" @click="setRule"><i class="fa fa-trash-o"></i>&nbsp;规则设置</a> #end
 				#if($shiro.hasPermission("device:delete")) <a class="btn btn-primary" @click="setFree"><i class="fa fa-trash-o"></i>&nbsp;强制设定(可用电量)</a> #end
@@ -57,31 +57,31 @@
 				<div class="form-group">
 					<div class="col-sm-2 control-label">电表名称</div>
 					<div class="col-sm-10">
-						<input type="text" class="form-control must" id="name" v-model="device.name"  placeholder="电表名称" />
+						<input type="text" class="form-control must"  maxlength="50"  id="name" v-model="device.name"  placeholder="电表名称" />
 					</div>
 				</div>
 				<div class="form-group">
 					<div class="col-sm-2 control-label">电表号</div>
 					<div class="col-sm-10">
-						<input type="text" class="form-control must"  id="code" v-model="device.code" placeholder="电表号" />
+						<input type="text" class="form-control must"  maxlength="50"  id="code" v-model="device.code" placeholder="电表号" />
 					</div>
 				</div>
 				<div class="form-group">
 					<div class="col-sm-2 control-label">当前电量</div>
 					<div class="col-sm-10">
-						<input type="text" class="form-control must" id="lateuse" v-model="device.lateuse" placeholder="当前电量" />
+						<input type="text" class="form-control must" maxlength="10" id="lateuse" v-model="device.lateuse" placeholder="当前电量" />
 					</div>
 				</div>
 				<div class="form-group">
 					<div class="col-sm-2 control-label">可用电量</div>
 					<div class="col-sm-10">
-						<input type="text" class="form-control must" id="freeuse" v-model="device.freeuse" placeholder="可用电量" />
+						<input type="text" class="form-control must"  maxlength="10" id="freeuse" v-model="device.freeuse" placeholder="可用电量" />
 					</div>
 				</div>
 				<div class="form-group">
 					<div class="col-sm-2 control-label">电价</div>
 					<div class="col-sm-10">
-						<input type="text" class="form-control"id="price" v-model="device.price" placeholder="电价" />
+						<input type="text" class="form-control"id="price"  maxlength="10" v-model="device.price" placeholder="电价" />
 					</div>
 				</div>
 				<div class="form-group">

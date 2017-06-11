@@ -4,161 +4,179 @@
 <mapper namespace="io.school.dao.DeviceDao">
 
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="io.school.entity.DeviceEntity" id="deviceMap">
-        <result property="id" column="id"/>
-        <result property="buildingid" column="buildingId"/>
-        <result property="roomid" column="roomId"/>
-        <result property="ruleid" column="ruleId"/>
-        <result property="name" column="name"/>
-        <result property="code" column="code"/>
-        <result property="price" column="price"/>
-        <result property="isover" column="isover"/>
-        <result property="lateuse" column="lateuse"/>
-        <result property="latetime" column="latetime"/>
-        <result property="paraname" column="paraname"/>
-        <result property="paracode" column="paracode"/>
-        <result property="isdouble" column="isdouble"/>
-        <result property="freeuse" column="freeuse"/>
-        <result property="remarks" column="remarks"/>
-             <association property="building" javaType="io.school.entity.BuildingEntity">
+	<resultMap type="io.school.entity.DeviceEntity" id="deviceMap">
+		<result property="id" column="id" />
+		<result property="buildingid" column="buildingId" />
+		<result property="roomid" column="roomId" />
+		<result property="ruleid" column="ruleId" />
+		<result property="name" column="name" />
+		<result property="code" column="code" />
+		<result property="status" column="status" />
+		<result property="price" column="price" />
+		<result property="isover" column="isover" />
+		<result property="lateuse" column="lateuse" />
+		<result property="latetime" column="latetime" />
+		<result property="paraname" column="paraname" />
+		<result property="paracode" column="paracode" />
+		<result property="isdouble" column="isdouble" />
+		<result property="freeuse" column="freeuse" />
+		<result property="remarks" column="remarks" />
+		<association property="building" javaType="io.school.entity.BuildingEntity">
 			<result property="id" column="building_id" />
 			<result property="name" column="building_name" />
 			<result property="code" column="building_code" />
 			<result property="adress" column="building_adress" />
 			<result property="remark" column="building_remark" />
 		</association>
-  		<association  property="room" javaType="io.school.entity.RoomEntity">
-	        <result property="id" column="room_id" />
+		<association property="room" javaType="io.school.entity.RoomEntity">
+			<result property="id" column="room_id" />
 			<result property="buildingid" column="room_buildingId" />
 			<result property="name" column="room_name" />
 			<result property="code" column="room_code" />
 			<result property="remark" column="room_remark" />
-   		 </association>
-  		<association  property="rule" javaType="io.school.entity.DeviceruleEntity">
-	   		<result property="id" column="rule_id"/>
-        	<result property="name" column="rule_name"/>
-   		 </association>
-    </resultMap>
+		</association>
+		<association property="rule" javaType="io.school.entity.DeviceruleEntity">
+			<result property="id" column="rule_id" />
+			<result property="name" column="rule_name" />
+		</association>
+	</resultMap>
 	<!-- 使用别名 -->
-    <sql id="cloums">
-   		d.id,d.buildingId,d.roomId,d.ruleId,d.NAME,d.CODE,d.price,d.isover,d.lateuse,d.latetime,d.paraname,d.paracode,d.isdouble,d.freeuse,d.remarks,
-   		b.id as building_id,b.name as building_name,
-        b.code as building_code,b.adress as building_adress,b.remark as building_remark,r.id as room_id,r.buildingid as room_buildingId,
-        r.name as room_name,r.code as room_code,r.remark as room_remark,
-        dr.id as rule_id,dr.name as rule_name
-    </sql>
-    
+	<sql id="cloums">
+		d.id,d.buildingId,d.roomId,d.ruleId,d.name,d.code,d.status,d.price,d.isover,d.lateuse,d.latetime,d.paraname,d.paracode,d.isdouble,d.freeuse,d.remarks,
+		b.id as building_id,b.name as building_name,
+		b.code as building_code,b.adress as building_adress,b.remark as
+		building_remark,r.id as room_id,r.buildingid as room_buildingId,
+		r.name as room_name,r.code as room_code,r.remark as room_remark,
+		dr.id as rule_id,dr.name as rule_name
+	</sql>
+
 	<select id="queryObject" resultMap="deviceMap">
-			select <include refid="cloums"/> from device d left join building b on d.buildingid=b.id 
-			left join room r on d.roomid=r.id 
-			left join devicerule dr on  dr.id=d.ruleid
-			where d.id = #{value}
+		select
+		<include refid="cloums" />
+		from device d left join building b on d.buildingid=b.id
+		left join room r on d.roomid=r.id
+		left join devicerule dr on dr.id=d.ruleid
+		where d.id = #{value}
 	</select>
 
 	<select id="queryList" resultMap="deviceMap">
-		select <include refid="cloums"/> from device d left join building b on d.buildingid=b.id 
-			left join room r on d.roomid=r.id 
-			left join devicerule dr on  dr.id=d.ruleid
+		select
+		<include refid="cloums" />
+		from device d left join building b on d.buildingid=b.id
+		left join room r on d.roomid=r.id
+		left join devicerule dr on dr.id=d.ruleid
 		<where>
 			<if test="name != null and name.trim() != ''">
-				and  d.name like concat('%',#{name},'%')  
+				and d.name like concat('%',#{name},'%')
 			</if>
 			<if test="buildingIds != null and buildingIds.trim() != ''">
-				and find_in_set(d.buildingId,#{buildingIds})  
+				and find_in_set(d.buildingId,#{buildingIds})
 			</if>
 			<if test="roomIds != null and roomIds.trim() != ''">
-				and  find_in_set(d.roomId,#{roomIds})   
+				and find_in_set(d.roomId,#{roomIds})
 			</if>
 		</where>
-        <choose>
-            <when test="sidx != null and sidx.trim() != ''">
-                order by d.${sidx} ${order}
-            </when>
+		<choose>
+			<when test="sidx != null and sidx.trim() != ''">
+				order by d.${sidx} ${order}
+			</when>
 			<otherwise>
-                order by d.id desc
+				order by d.buildingId ,d.roomId ,d.code asc
 			</otherwise>
-        </choose>
+		</choose>
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
 	</select>
-	
- 	<select id="queryTotal" resultType="int">
-		select count(*) from device d left join building b on d.buildingid=b.id 
-			left join room r on d.roomid=r.id 
-			left join devicerule dr on  dr.id=d.ruleid
-		 <where>
+
+	<select id="queryTotal" resultType="int">
+		select count(*) from device d left join building b on
+		d.buildingid=b.id
+		left join room r on d.roomid=r.id
+		left join devicerule dr on dr.id=d.ruleid
+		<where>
 			<if test="name != null and name.trim() != ''">
-				and  d.name like concat('%',#{name},'%')  
+				and d.name like concat('%',#{name},'%')
+			</if>
+			<if test="buildingIds != null and buildingIds.trim() != ''">
+				and find_in_set(d.buildingId,#{buildingIds})
+			</if>
+			<if test="roomIds != null and roomIds.trim() != ''">
+				and find_in_set(d.roomId,#{roomIds})
 			</if>
 		</where>
 	</select>
-	 
-	<insert id="save" parameterType="io.school.entity.DeviceEntity" useGeneratedKeys="true" keyProperty="id">
+
+	<insert id="save" parameterType="io.school.entity.DeviceEntity"
+		useGeneratedKeys="true" keyProperty="id">
 		insert into device
 		(
-			`buildingId`, 
-			`roomId`, 
-			`ruleId`, 
-			`name`, 
-			`code`, 
-			`price`, 
-			`isover`, 
-			`lateuse`, 
-			`latetime`, 
-			`paraname`, 
-			`paracode`, 
-			`isdouble`, 
-			`freeuse`, 
-			`remarks`
+		buildingId,
+		roomId,
+		ruleId,
+		name,
+		code,
+		status,
+		price,
+		isover,
+		lateuse,
+		latetime,
+		paraname,
+		paracode,
+		isdouble,
+		freeuse,
+		remarks
 		)
 		values
 		(
-			#{buildingid}, 
-			#{roomid}, 
-			#{ruleid}, 
-			#{name}, 
-			#{code}, 
-			#{price}, 
-			#{isover}, 
-			#{lateuse}, 
-			#{latetime}, 
-			#{paraname}, 
-			#{paracode}, 
-			#{isdouble}, 
-			#{freeuse}, 
-			#{remarks}
+		#{buildingid},
+		#{roomid},
+		#{ruleid},
+		#{name},
+		#{code},
+		#{status},
+		#{price},
+		#{isover},
+		#{lateuse},
+		#{latetime},
+		#{paraname},
+		#{paracode},
+		#{isdouble},
+		#{freeuse},
+		#{remarks}
 		)
 	</insert>
-	 
+
 	<update id="update" parameterType="io.school.entity.DeviceEntity">
-		update device 
+		update device
 		<set>
-			<if test="buildingid != null">`buildingId` = #{buildingid}, </if>
-			<if test="roomid != null">`roomId` = #{roomid}, </if>
-			<if test="ruleid != null">`ruleId` = #{ruleid}, </if>
-			<if test="name != null">`name` = #{name}, </if>
-			<if test="code != null">`code` = #{code}, </if>
-			<if test="price != null">`price` = #{price}, </if>
-			<if test="isover != null">`isover` = #{isover}, </if>
-			<if test="lateuse != null">`lateuse` = #{lateuse}, </if>
-			<if test="latetime != null">`latetime` = #{latetime}, </if>
-			<if test="paraname != null">`paraname` = #{paraname}, </if>
-			<if test="paracode != null">`paracode` = #{paracode}, </if>
-			<if test="isdouble != null">`isdouble` = #{isdouble}, </if>
-			<if test="freeuse != null">`freeuse` = #{freeuse}, </if>
-			<if test="remarks != null">`remarks` = #{remarks}</if>
+			<if test="buildingid != null">buildingId = #{buildingid}, </if>
+			<if test="roomid != null">roomId = #{roomid}, </if>
+			<if test="ruleid != null">ruleId = #{ruleid}, </if>
+			<if test="name != null">name = #{name}, </if>
+			<if test="code != null">code = #{code}, </if>
+			<if test="status != null">status = #{status}, </if>
+			<if test="price != null">price = #{price}, </if>
+			<if test="isover != null">isover = #{isover}, </if>
+			<if test="lateuse != null">lateuse = #{lateuse}, </if>
+			<if test="latetime != null">latetime = #{latetime}, </if>
+			<if test="paraname != null">paraname = #{paraname}, </if>
+			<if test="paracode != null">paracode = #{paracode}, </if>
+			<if test="isdouble != null">isdouble = #{isdouble}, </if>
+			<if test="freeuse != null">freeuse = #{freeuse}, </if>
+			<if test="remarks != null">remarks = #{remarks}</if>
 		</set>
 		where id = #{id}
 	</update>
-	
+
 	<delete id="delete">
 		delete from device where id = #{value}
 	</delete>
-	
+
 	<delete id="deleteBatch">
-		delete from device where id in 
-		<foreach item="id" collection="array" open="(" separator="," close=")">
+		delete from device where id in
+		<foreach item="id" collection="array" open="(" separator=","
+			close=")">
 			#{id}
 		</foreach>
 	</delete>

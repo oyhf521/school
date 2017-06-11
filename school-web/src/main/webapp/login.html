@@ -31,7 +31,7 @@
 <body class="beg-login-bg login-page">
 	<div class="login-box" id="rrapp" v-cloak>
 		<div class="login-logo">
-		<!-- 	<b style="color: #fff">校园用电监控系统</b> -->
+			<!-- 	<b style="color: #fff">校园用电监控系统</b> -->
 		</div>
 		<!-- /.login-logo -->
 		<div class="login-box-body">
@@ -42,7 +42,8 @@
 				</h4>
 			</div>
 			<div class="form-group has-feedback">
-				<input type="text" class="form-control" v-model="username" placeholder="账号"> <span class="glyphicon glyphicon-user form-control-feedback"></span>
+				<input type="text" class="form-control" v-model="username" placeholder="账号"> <span
+					class="glyphicon glyphicon-user form-control-feedback"></span>
 			</div>
 			<div class="form-group has-feedback">
 				<input type="password" class="form-control" v-model="password" placeholder="密码"> <span
@@ -80,11 +81,9 @@
 	<script src="statics/libs/fastclick.min.js"></script>
 	<script src="statics/libs/app.js"></script>
 	<script type="text/javascript">
-		var vm = new Vue(
-		{
+		var vm = new Vue({
 			el : '#rrapp',
-			data :
-			{
+			data : {
 				username : '',
 				password : '',
 				captcha : '',
@@ -92,38 +91,29 @@
 				errorMsg : '',
 				src : 'captcha.jpg'
 			},
-			beforeCreate : function()
-			{
-				if (self != top)
-				{
+			beforeCreate : function() {
+				if (self != top) {
 					top.location.href = self.location.href;
 				}
 			},
-			methods :
-			{
-				refreshCode : function()
-				{
+			methods : {
+				refreshCode : function() {
 					this.src = "captcha.jpg?t=" + $.now();
 				},
-				login : function(event)
-				{
-					var data = "username=" + vm.username + "&password=" + vm.password + "&captcha=" + vm.captcha;
-					$.ajax(
-					{
+				login : function(event) {
+					var data = "username=" + vm.username + "&password="
+							+ vm.password + "&captcha=" + vm.captcha;
+					$.ajax({
 						type : "POST",
 						url : "sys/login",
 						data : data,
 						dataType : "json",
-						success : function(result)
-						{
-							if (result.code == 0)
-							{//登录成功
+						success : function(result) {
+							if (result.code == 0) {//登录成功
 								parent.location.href = 'index.html';
-							} else
-							{
+							} else {
 								vm.error = true;
 								vm.errorMsg = result.msg;
-
 								vm.refreshCode();
 							}
 						}
@@ -131,6 +121,14 @@
 				}
 			}
 		});
+		// enter 键
+		document.onkeydown = function(event) {
+			var e = event || window.event
+					|| arguments.callee.caller.arguments[0];
+			if (e && e.keyCode == 13) {
+				vm.login();
+			}
+		};
 	</script>
 </body>
 </html>

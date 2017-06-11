@@ -135,7 +135,22 @@ public class DeviceController {
 		return R.ok();
 	}
 	/**
-	 * 修改
+	 * 换表
+	 */
+	@RequestMapping("/setChange")
+	@RequiresPermissions("device:update")
+	public R setChange(@RequestBody DeviceEntity device) {
+		verifyForm(device);
+		try {
+			deviceService.updateChange(device);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return R.ok();
+	}
+	/**
+	 * 修改价格
 	 */
 	@RequestMapping("/setprice")
 	public R setprice(HttpServletRequest request, HttpServletResponse response) {
@@ -154,7 +169,7 @@ public class DeviceController {
 		return R.ok();
 	}
 	/**
-	 * 修改
+	 * 设置规则
 	 */
 	@RequestMapping("/setRule")
 	public R setRule(HttpServletRequest request, HttpServletResponse response) {
@@ -171,16 +186,16 @@ public class DeviceController {
 		return R.ok();
 	}
 	/**
-	 * 修改
+	 * 通电停电
 	 */
 	@RequestMapping("/setRunStop")
 	public R setRunStop(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			String  ruleId =request.getParameter("ruleId");
+			String  status =request.getParameter("status");
 			String  build =request.getParameter("build");
 			String  roomIds =request.getParameter("roomIds");
 			String  buildingIds =request.getParameter("buildingIds");
-			deviceService.updateRunStop(ruleId,build,roomIds,buildingIds);
+			deviceService.updateRunStop(status,build,roomIds,buildingIds);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -188,7 +203,7 @@ public class DeviceController {
 		return R.ok();
 	}
 	/**
-	 * 修改
+	 *  强制设定(可用电量)
 	 */
 	@RequestMapping("/setFree")
 	public R setFree(HttpServletRequest request, HttpServletResponse response) {

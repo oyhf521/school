@@ -1,11 +1,10 @@
 $(function () {
+var deviceid=	T.p("deviceid");
     $("#jqGrid").jqGrid({
-        url: '../devicekwh/list',
+        url: '../devicekwh/list?deviceid='+deviceid,
         datatype: "json",
         colModel: [			
 			{ label: 'id', name: 'id', index: 'id', width: 50, key: true,hidden : true  },
-			{ label: '房间ID', name: 'roomid', index: 'roomId', width: 80 }, 			
-			{ label: '电表ID', name: 'deviceid', index: 'deviceid', width: 80 }, 			
 			{ label: '电表名称', name: 'devicename', index: 'devicename', width: 80 }, 			
 			{ label: '电表号', name: 'devicecode', index: 'devicecode', width: 80 }, 			
 			{ label: '操作类型', name: 'optype', index: 'optype', width: 80 }, 			

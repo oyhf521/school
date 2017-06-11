@@ -29,13 +29,16 @@
 			<if test="name != null and name.trim() != ''">
 				and  name like concat('%',#{name},'%')  
 			</if>
+			<if test="deviceid != null and deviceid.trim() != ''">
+				and  deviceid=#{deviceid}
+			</if>
 		</where>
         <choose>
             <when test="sidx != null and sidx.trim() != ''">
                 order by ${sidx} ${order}
             </when>
 			<otherwise>
-                order by id desc
+                order by optime desc
 			</otherwise>
         </choose>
 		<if test="offset != null and limit != null">
@@ -45,6 +48,14 @@
 	
  	<select id="queryTotal" resultType="int">
 		select count(*) from devicekwh 
+			<where>
+			<if test="name != null and name.trim() != ''">
+				and  name like concat('%',#{name},'%')  
+			</if>
+			<if test="deviceid != null and deviceid.trim() != ''">
+				and  deviceid=#{deviceid}
+			</if>
+		</where>
 	</select>
 	 
 	<insert id="save" parameterType="io.school.entity.DevicekwhEntity" useGeneratedKeys="true" keyProperty="id">

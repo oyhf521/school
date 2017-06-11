@@ -28,6 +28,10 @@ public class DeviceEntity implements Serializable {
 	private String name;
 	//电表号
 	private String code;
+	//新电表号
+	private String newcode;
+	//状态：“停电”或“通电”
+	private String status;
 	//电价
 	private BigDecimal price;
 	//是否允许欠费
@@ -121,6 +125,18 @@ public class DeviceEntity implements Serializable {
 	 */
 	public String getCode() {
 		return code;
+	}
+	public String getNewcode() {
+		return newcode;
+	}
+	public void setNewcode(String newcode) {
+		this.newcode = newcode;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	/**
 	 * 设置：电价
