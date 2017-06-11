@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.school.dao.PersonDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.school.entity.PersonEntity" id="personMap">
+        <result property="id" column="id"/>
+        <result property="roomid" column="roomId"/>
+        <result property="buildingid" column="buildingId"/>
+        <result property="name" column="name"/>
+        <result property="code" column="code"/>
+        <result property="mobile" column="mobile"/>
+        <result property="idnumber" column="idnumber"/>
+        <result property="status" column="status"/>
+        <result property="remarks" column="remarks"/>
+        <association property="building" javaType="io.school.entity.BuildingEntity">
+			<result property="id" column="building_id" />
+			<result property="name" column="building_name" />
+			<result property="code" column="building_code" />
+			<result property="adress" column="building_adress" />
+			<result property="remark" column="building_remark" />
+		</association>
+  		<association  property="room" javaType="io.school.entity.RoomEntity">
+	        <result property="id" column="room_id" />
+			<result property="buildingid" column="room_buildingId" />
+			<result property="name" column="room_name" />
+			<result property="code" column="room_code" />
+			<result property="remark" column="room_remark" />
+   		 </association>
+    </resultMap>
+	<!-- 使用别名 -->
+    <sql id="cloums">
+        p.id,p.name,p.buildingId,p.roomid,p.code,p.mobile,p.idnumber,p.status,p.remarks,b.id as building_id,b.name as building_name,
+        b.code as building_code,b.adress as building_adress,b.remark as building_remark,r.id as room_id,r.buildingid as room_buildingId,
+        r.name as room_name,r.code as room_code,r.remark as room_remark
+    </sql>
+    
+	<select id="queryObject" resultMap="personMap">
+		select <include refid="cloums"/> from person p left join building b on p.buildingid=b.id left join room r on p.roomid=r.id  where p.id = #{value}
+	</select>
+
+	<select id="queryList" resultMap="personMap">
+		select <include refid="cloums"/> from person p left join building b on p.buildingid=b.id left join room r on p.roomid=r.id  
+		<where>
+			<if test="name != null and name.trim() != ''">
+				and p.name like concat('%',#{name},'%') or p.code like concat('%',#{name},'%') or p.mobile like concat('%',#{name},'%')
+				 or p.idnumber like concat('%',#{name},'%') 
+			</if>
+		</where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by r.code asc,p.code asc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from person 
+			<where>
+			<if test="name != null and name.trim() != ''">
+				and p.name like concat('%',#{name},'%') or p.code like concat('%',#{name},'%') or p.mobile like concat('%',#{name},'%')
+				 or p.idnumber like concat('%',#{name},'%') 
+			</if>
+		</where>
+	</select>
+	 
+	<insert id="save" parameterType="io.school.entity.PersonEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into person
+		(
+			`roomId`, 
+			`buildingId`, 
+			`name`, 
+			`code`, 
+			`mobile`, 
+			`idnumber`, 
+			`status`, 
+			`remarks`
+		)
+		values
+		(
+			#{roomid}, 
+			#{buildingid}, 
+			#{name}, 
+			#{code}, 
+			#{mobile}, 
+			#{idnumber}, 
+			#{status}, 
+			#{remarks}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="io.school.entity.PersonEntity">
+		update person 
+		<set>
+			<if test="roomid != null">`roomId` = #{roomid}, </if>
+			<if test="buildingid != null">`buildingId` = #{buildingid}, </if>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="code != null">`code` = #{code}, </if>
+			<if test="mobile != null">`mobile` = #{mobile}, </if>
+			<if test="idnumber != null">`idnumber` = #{idnumber}, </if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="remarks != null">`remarks` = #{remarks}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from person where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from person where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+</mapper>

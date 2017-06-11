@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>电表</title> #parse("sys/header.html")
+</head>
+<body>
+	<div id="rrapp" v-cloak>
+		<div v-show="showList">
+			<div class="grid-btn">
+				<div class="form-group col-sm-2">
+					<input type="text" class="form-control" v-model="q.name" @keyup.enter="query" placeholder="名称">
+				</div>
+				<a class="btn btn-default" @click="query">查询</a>
+			</div>
+			<div class="panel-heading">
+				#if($shiro.hasPermission("device:save")) <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a> #end
+				#if($shiro.hasPermission("device:update")) <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a> #end
+				#if($shiro.hasPermission("device:delete")) <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a> #end
+				#if($shiro.hasPermission("device:delete")) <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;换表</a> #end
+				#if($shiro.hasPermission("device:delete")) <a class="btn btn-primary" @click="setPrice"><i class="fa fa-trash-o"></i>&nbsp;电价设置</a> #end
+				#if($shiro.hasPermission("device:delete")) <a class="btn btn-primary" @click="setRule"><i class="fa fa-trash-o"></i>&nbsp;规则设置</a> #end
+				#if($shiro.hasPermission("device:delete")) <a class="btn btn-primary" @click="setFree"><i class="fa fa-trash-o"></i>&nbsp;强制设定(可用电量)</a> #end
+				#if($shiro.hasPermission("device:delete")) <a class="btn btn-primary" @click="setRun"><i class="fa fa-trash-o"></i>&nbsp;手动停/通电</a> #end
+				#if($shiro.hasPermission("device:delete")) <a class="btn btn-primary" @click="devicekwh"><i class="fa fa-trash-o"></i>&nbsp;查看用电量情况</a> #end
+			</div>
+			<table id="jqGrid"></table>
+			<div id="jqGridPager"></div>
+		</div>
+
+		<div v-show="!showList" class="panel panel-default">
+			<div class="panel-heading">{{title}}</div>
+			<form class="form-horizontal" >
+				<div class="form-group">
+					<div class="col-sm-2 control-label">楼栋</div>
+					<div class="col-sm-10">
+						<select v-model="device.buildingid" id="buildingId"  @click="changeBuild" class="form-control must">
+							<option v-for="option in buildings" v-bind:value="option.id">{{ option.name }}</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 control-label">房间</div>
+					<div class="col-sm-10">
+						<select v-model="device.roomid"  id="roomid" class="form-control must">
+							<option v-for="option in rooms" v-bind:value="option.id">{{ option.name }}</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 control-label">用电规则</div>
+					<div class="col-sm-10">
+						<select v-model="device.ruleid"   id="ruleid" class="form-control must">
+							<option v-for="option in ruleids" v-bind:value="option.id">{{ option.name }}</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 control-label">电表名称</div>
+					<div class="col-sm-10">
+						<input type="text" class="form-control must" id="name" v-model="device.name"  placeholder="电表名称" />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 control-label">电表号</div>
+					<div class="col-sm-10">
+						<input type="text" class="form-control must"  id="code" v-model="device.code" placeholder="电表号" />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 control-label">当前电量</div>
+					<div class="col-sm-10">
+						<input type="text" class="form-control must" id="lateuse" v-model="device.lateuse" placeholder="当前电量" />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 control-label">可用电量</div>
+					<div class="col-sm-10">
+						<input type="text" class="form-control must" id="freeuse" v-model="device.freeuse" placeholder="可用电量" />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 control-label">电价</div>
+					<div class="col-sm-10">
+						<input type="text" class="form-control"id="price" v-model="device.price" placeholder="电价" />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 control-label">是否允许欠费</div>
+					<div class="col-sm-10">
+						<div class="col-sm-10">
+							<label class="radio-inline"> <input type="radio" name="isover" value="Y" v-model="device.isover" /> 允许欠费
+							</label> <label class="radio-inline"> <input type="radio" name="isover" value="N" v-model="device.isover" /> 不许欠费
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 control-label">单线双线</div>
+					<div class="col-sm-10">
+						<label class="radio-inline"> <input type="radio" name="isdouble" value="1" v-model="device.isdouble" /> 单线
+						</label> <label class="radio-inline"> <input type="radio"  name="isdouble" name="isdouble" value="2" v-model="device.isdouble" /> 双线
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 control-label">备注</div>
+					<div class="col-sm-10">
+					<textarea rows="5"  class="form-control" v-model="device.remarks" placeholder="备注"  ></textarea>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 control-label"></div>
+					<input type="button" class="btn btn-primary" @click="saveOrUpdate"  value="确定" /> &nbsp;&nbsp;<input type="button"
+						class="btn btn-warning" @click="reload" value="返回" />
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<script src="${rc.contextPath}/js/base/device.js?_${date.systemTime}"></script>
+</body>
+</html>

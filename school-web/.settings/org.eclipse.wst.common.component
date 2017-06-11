@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="school">
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <dependent-module archiveName="school-common-2.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/school-common/school-common">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="school-shiro-2.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/school-shiro/school-shiro">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="school-gen-2.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/school-gen/school-gen">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="school-schedule-2.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/school-schedule/school-schedule">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="school-poi-2.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/school-poi/school-poi">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="school-api-2.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/school-api/school-api">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="java-output-path" value="/school-web/target/classes"/>
+        <property name="context-root" value="school"/>
+    </wb-module>
+</project-modules>

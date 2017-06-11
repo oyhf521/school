@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>电表</title> #parse("sys/header.html")
+</head>
+<body>
+	<div id="rrapp" v-cloak>
+		<div class="panel panel-default">
+			<div class="panel-heading">修改</div>
+			<form class="form-horizontal">
+				<div class="form-group">
+					<div class="col-sm-2 control-label">楼栋</div>
+					<div class="col-sm-10">
+						<select v-model="device.buildingid" id="buildingId" disabled="disabled" @click="changeBuild" class="form-control">
+							<option v-for="option in buildings" v-bind:value="option.id">{{ option.name }}</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 control-label">房间</div>
+					<div class="col-sm-10">
+						<select v-model="device.roomid" id="roomid" disabled="disabled" class="form-control">
+							<option v-for="option in rooms" v-bind:value="option.id">{{ option.name }}</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 control-label">用电规则</div>
+					<div class="col-sm-10">
+						<select v-model="device.ruleid" id="ruleid" class="form-control must">
+							<option v-for="option in ruleids" v-bind:value="option.id">{{ option.name }}</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 control-label">电表名称</div>
+					<div class="col-sm-10">
+						<input type="text" class="form-control must" id="name" v-model="device.name" placeholder="电表名称" />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 control-label">电表号</div>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="code" readonly="readonly" v-model="device.code" placeholder="电表号" />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 control-label">当前电量</div>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="lateuse" readonly="readonly" v-model="device.lateuse" placeholder="当前电量" />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 control-label">可用电量</div>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="freeuse" readonly="readonly" v-model="device.freeuse" placeholder="可用电量" />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 control-label">电价</div>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="price" v-model="device.price" placeholder="电价" />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 control-label">是否允许欠费</div>
+					<div class="col-sm-10">
+						<div class="col-sm-10">
+							<label class="radio-inline"> <input type="radio" name="isover" value="Y" v-model="device.isover" /> 允许欠费
+							</label> <label class="radio-inline"> <input type="radio" name="isover" value="N" v-model="device.isover" /> 不许欠费
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 control-label">单线双线</div>
+					<div class="col-sm-10">
+						<label class="radio-inline"> <input type="radio" name="isdouble" value="1" v-model="device.isdouble" /> 单线
+						</label> <label class="radio-inline"> <input type="radio" name="isdouble" name="isdouble" value="2" v-model="device.isdouble" /> 双线
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 control-label">备注</div>
+					<div class="col-sm-10">
+						<textarea rows="5" class="form-control" v-model="device.remarks" placeholder="备注"></textarea>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 control-label"></div>
+					<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定" /> &nbsp;&nbsp;<input type="button" class="btn btn-warning"
+						@click="reload" value="返回" />
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<script>
+		$(document).ready(function()
+		{
+			var vm = new Vue(
+			{
+				el : '#rrapp',
+				data :
+				{
+					buildings : null,
+					rooms : null,
+					ruleids : null,
+					formstate :
+					{},
+					device :
+					{}
+				},
+				methods :
+				{
+					getSelect : function()
+					{
+						$.ajax(
+						{
+							type : "get",
+							url : "../device/getSelect",
+							async : false,
+							success : function(r)
+							{
+								vm.ruleids = r.ruleList;
+								vm.buildings = r.buildingList;
+								vm.rooms = r.roomList;
+								console.log(r.ruleList);
+							}
+						});
+
+					},
+					changeBuild : function(e)
+					{
+						console.log(e.target.value);
+						var buildingId = e.target.value;
+						//加载 
+						$.get("../room/select?buildingId=" + buildingId, function(r)
+						{
+							vm.rooms = r.roomList;
+						})
+					},
+					saveOrUpdate : function()
+					{
+						if (dateCheck())
+						{
+							var url = "../device/update";
+							$.ajax(
+							{
+								type : "POST",
+								url : url,
+								data : JSON.stringify(vm.device),
+								success : function(r)
+								{
+									if (r.code === 0)
+									{
+										alert('操作成功', function(index)
+										{
+											vm.reload();
+										});
+									} else
+									{
+										alert(r.msg);
+									}
+								}
+							});
+						}
+
+					},
+					getInfo : function(id)
+					{
+						$.get("../device/info/" + id, function(r)
+						{
+							vm.device = r.device;
+						});
+					},
+					reload : function()
+					{
+						location.href = "${rc.contextPath}/base/device.html";
+					}
+				}
+			});
+			vm.getSelect();
+			vm.getInfo(T.p("deviceid"));
+			console.log(T.p("deviceid"));
+		});
+		function dateCheck()
+		{
+			var name = $('#name').val();
+			if (name == '' || name == null)
+			{
+				tips("电表名称不能为空！", '#name');
+				return false;
+			}
+			var reg = /^[0-9]+(.[0-9]{1,2})?$/;
+			var price = $('#price').val();
+			if (price != '' && price != null)
+			{
+				if (!reg.test($("#price").val()))
+				{
+					tips("可用电量只能为2位小数位的数字！", '#price');
+					return false;
+					return false;
+				}
+			}
+			return true;
+		}
+	</script>
+</body>
+</html>

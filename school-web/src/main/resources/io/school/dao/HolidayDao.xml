@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.school.dao.HolidayDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.school.entity.HolidayEntity" id="holidayMap">
+        <result property="id" column="id"/>
+        <result property="holiday" column="holiday"/>
+        <result property="week" column="week"/>
+        <result property="name" column="name"/>
+        <result property="isholiday" column="isholiday"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="io.school.entity.HolidayEntity">
+		select * from holiday where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="io.school.entity.HolidayEntity">
+		select * from holiday
+		<where>
+			<if test="name != null and name.trim() != ''">
+				and  holiday like concat('%',#{name},'%')  
+			</if>
+		</where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by holiday asc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	<select id="findObject" resultType="io.school.entity.HolidayEntity">
+		select * from holiday
+		<where>
+			and  holiday = #{holiday} 
+		</where>
+	</select>
+	
+	<select id="startList" resultType="io.school.entity.HolidayEntity">
+		select * from holiday
+		<where>
+			and  holiday &gt;= #{holiday} 
+		</where>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from holiday 
+	</select>
+	 
+	<insert id="save" parameterType="io.school.entity.HolidayEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into holiday
+		(
+			`holiday`, 
+			`week`, 
+			`name`, 
+			`isholiday`
+		)
+		values
+		(
+			#{holiday}, 
+			#{week}, 
+			#{name}, 
+			#{isholiday}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="io.school.entity.HolidayEntity">
+		update holiday 
+		<set>
+			<if test="holiday != null">`holiday` = #{holiday}, </if>
+			<if test="week != null">`week` = #{week}, </if>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="isholiday != null">`isholiday` = #{isholiday}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from holiday where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from holiday where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

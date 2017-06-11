@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>电表</title> #parse("sys/header.html")
+</head>
+<body>
+	<div id="rrapp">
+		<div class="panel panel-default">
+			<div class="panel-heading">用电规则设置</div>
+			<form id="deviceform" class="form-horizontal">
+				<div class="form-group">
+					<div class="col-sm-2 control-label">规则</div>
+					<div class="col-sm-10">
+						<input id="ruleId" name="ruleId" class="form-control" style="width: 380px; height: 34px;" />
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-2 control-label">楼栋房间</div>
+					<div class="col-sm-10">
+						<div class="col-sm-10">
+							<label class="radio-inline"> <input type="radio" name="build" onchange="clickRadio(1)" checked="checked" value="Y" /> 按楼栋
+							</label> <label class="radio-inline"> <input type="radio" onchange="clickRadio(2)" name="build" value="N" /> 按房间
+							</label>
+						</div>
+					</div>
+				</div>
+				<div id="divbuildingId">
+					<div class="form-group">
+						<div class="col-sm-2 control-label">楼栋</div>
+						<div class="col-sm-10">
+							<input id="buildingId" name="buildingId" class="form-control" style="width: 380px; height: 34px;" />
+						</div>
+					</div>
+				</div>
+				<div id="divroomId">
+					<div class="form-group">
+						<div class="col-sm-2 control-label">房间</div>
+						<div class="col-sm-10">
+							<input id="roomId" name="roomId" class="form-control" style="width: 380px; height: 34px;" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 control-label"></div>
+					<input type="button" class="btn btn-primary" onclick="saveOrUpdate()" value="确定" /> &nbsp;&nbsp;<input type="button" class="btn btn-warning"
+						onclick="reload()" value="返回" />
+				</div>
+			</form>
+		</div>
+	</div>
+	<style>
+.combotree {
+	width: 100px !important;
+	height: 34px !important;
+}
+</style>
+	<script>
+		$(document).ready(function()
+		{
+
+			$('#ruleId').combobox(
+			{
+				method : 'post',
+				valueField : 'id',
+				textField : 'name',
+				url : '../devicerule/ruleList',
+				editable : false
+			});
+			$("#divroomId").hide();
+			$('#buildingId').combotree(
+			{
+				method : 'post',
+				url : '../building/buildingListTree',
+				multiple : true,
+				editable : false,
+				onlyLeafCheck : true,
+				onLoadSuccess : function(node, data)
+				{
+					$('#buildingId').combotree('tree').tree('collapseAll');
+				}
+			});
+			$('#roomId').combotree(
+			{
+				method : 'post',
+				url : '../room/roomListTree',
+				multiple : true,
+				editable : false,
+				//onlyLeafCheck : true,
+				onLoadSuccess : function(node, data)
+				{
+					$('#roomId').combotree('tree').tree('collapseAll');
+				}
+			});
+		});
+		function saveOrUpdate()
+		{
+			var ruleId = $('#ruleId').combobox('getValue');
+			var build = $("input[name='build']:checked").val();
+			var roomIds = $('#roomId').combotree('getValues');
+			var buildingIds = $('#buildingId').combotree('getValues');
+			console.log("build=" + build + "&ruleId=" + ruleId + "&roomIds=" + roomIds + "&buildingIds=" + buildingIds);
+			if (ruleId == '' || ruleId == null)
+			{
+				tips("请选择一个用电规则！", '#ruleId');
+				return false;
+			} else
+			{
+				var url = "../device/setRule?build=" + build + "&ruleId=" + ruleId + "&roomIds=" + roomIds
+						+ "&buildingIds=" + buildingIds;
+				$.ajax(
+				{
+					type : "POST",
+					url : url,
+					success : function(r)
+					{
+						if (r.code === 0)
+						{
+							alert('操作成功', function(index)
+							{
+								reload();
+							});
+						} else
+						{
+							alert(r.msg);
+						}
+					}
+				});
+			}
+		}
+		function reload()
+		{
+			location.href = "${rc.contextPath}/base/device.html";
+		}
+		function clickRadio(v)
+		{
+			console.log(v);
+			if (v == 1)
+			{
+				$("#divroomId").hide();
+				$("#divbuildingId").show();
+				$('#roomId').combotree('setValues', '');
+			} else
+			{
+				$("#divroomId").show();
+				$("#divbuildingId").hide();
+				$('#buildingId').combotree('setValues', '');
+			}
+
+		}
+	</script>
+</body>
+</html>

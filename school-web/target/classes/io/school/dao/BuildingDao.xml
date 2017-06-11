@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.school.dao.BuildingDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.school.entity.BuildingEntity" id="buildingMap">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="code" column="code"/>
+        <result property="adress" column="adress"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="io.school.entity.BuildingEntity">
+		select * from building where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="io.school.entity.BuildingEntity">
+		select * from building
+	 	<where>
+			<if test="name != null and name.trim() != ''">
+				and name like concat('%',#{name},'%') or code like concat('%',#{name},'%')
+			</if>
+		</where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by code asc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from building 
+		<where>
+			<if test="name != null and name.trim() != ''">
+				and name like concat('%',#{name},'%') or code like concat('%',#{name},'%')
+			</if>
+		</where>
+	</select>
+	 
+	<insert id="save" parameterType="io.school.entity.BuildingEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into building
+		(
+			`name`, 
+			`code`, 
+			`adress`, 
+			`remark`
+		)
+		values
+		(
+			#{name}, 
+			#{code}, 
+			#{adress}, 
+			#{remark}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="io.school.entity.BuildingEntity">
+		update building 
+		<set>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="code != null">`code` = #{code}, </if>
+			<if test="adress != null">`adress` = #{adress}, </if>
+			<if test="remark != null">`remark` = #{remark}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from building where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from building where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

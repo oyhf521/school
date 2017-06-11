@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.school.dao.DevicekwhDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.school.entity.DevicekwhEntity" id="devicekwhMap">
+        <result property="id" column="id"/>
+        <result property="roomid" column="roomId"/>
+        <result property="deviceid" column="deviceid"/>
+        <result property="devicename" column="devicename"/>
+        <result property="devicecode" column="devicecode"/>
+        <result property="optype" column="optype"/>
+        <result property="befkwh" column="befKwh"/>
+        <result property="changekwh" column="changeKwh"/>
+        <result property="aftkwh" column="aftKwh"/>
+        <result property="opuse" column="opuse"/>
+        <result property="optime" column="optime"/>
+        <result property="remarks" column="remarks"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="io.school.entity.DevicekwhEntity">
+		select * from devicekwh where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="io.school.entity.DevicekwhEntity">
+		select * from devicekwh
+		<where>
+			<if test="name != null and name.trim() != ''">
+				and  name like concat('%',#{name},'%')  
+			</if>
+		</where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from devicekwh 
+	</select>
+	 
+	<insert id="save" parameterType="io.school.entity.DevicekwhEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into devicekwh
+		(
+			`roomId`, 
+			`deviceid`, 
+			`devicename`, 
+			`devicecode`, 
+			`optype`, 
+			`befKwh`, 
+			`changeKwh`, 
+			`aftKwh`, 
+			`opuse`, 
+			`optime`, 
+			`remarks`
+		)
+		values
+		(
+			#{roomid}, 
+			#{deviceid}, 
+			#{devicename}, 
+			#{devicecode}, 
+			#{optype}, 
+			#{befkwh}, 
+			#{changekwh}, 
+			#{aftkwh}, 
+			#{opuse}, 
+			#{optime}, 
+			#{remarks}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="io.school.entity.DevicekwhEntity">
+		update devicekwh 
+		<set>
+			<if test="roomid != null">`roomId` = #{roomid}, </if>
+			<if test="deviceid != null">`deviceid` = #{deviceid}, </if>
+			<if test="devicename != null">`devicename` = #{devicename}, </if>
+			<if test="devicecode != null">`devicecode` = #{devicecode}, </if>
+			<if test="optype != null">`optype` = #{optype}, </if>
+			<if test="befkwh != null">`befKwh` = #{befkwh}, </if>
+			<if test="changekwh != null">`changeKwh` = #{changekwh}, </if>
+			<if test="aftkwh != null">`aftKwh` = #{aftkwh}, </if>
+			<if test="opuse != null">`opuse` = #{opuse}, </if>
+			<if test="optime != null">`optime` = #{optime}, </if>
+			<if test="remarks != null">`remarks` = #{remarks}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from devicekwh where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from devicekwh where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

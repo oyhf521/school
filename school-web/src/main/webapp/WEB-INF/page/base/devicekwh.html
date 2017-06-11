@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>电表流水</title>
+#parse("sys/header.html")
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+			<div class="form-group col-sm-2">
+  			<input type="text" class="form-control" v-model="q.name" @keyup.enter="query" placeholder="名称">			
+			</div>
+			<a class="btn btn-default" @click="query">查询</a> 
+			<a class="btn btn-warning" @click="goBack"><i class="fa fa-arrow-left"></i>&nbsp;返回</a>
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+    
+    <div v-show="!showList" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+											<div class="form-group">
+			   	<div class="col-sm-2 control-label">房间ID</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="devicekwh.roomid" placeholder="房间ID"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">电表ID</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="devicekwh.deviceid" placeholder="电表ID"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">电表名称</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="devicekwh.devicename" placeholder="电表名称"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">电表号</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="devicekwh.devicecode" placeholder="电表号"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">操作类型</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="devicekwh.optype" placeholder="操作类型"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">操作前（可用电量）</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="devicekwh.befkwh" placeholder="操作前（可用电量）"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">增减数</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="devicekwh.changekwh" placeholder="增减数"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">操作后（可用电量）</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="devicekwh.aftkwh" placeholder="操作后（可用电量）"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">操作人</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="devicekwh.opuse" placeholder="操作人"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">操作时间</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="devicekwh.optime" placeholder="操作时间"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">备注</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="devicekwh.remarks" placeholder="备注"/>
+			    </div>
+			</div>
+							<div class="form-group">
+				<div class="col-sm-2 control-label"></div> 
+				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script src="${rc.contextPath}/js/base/devicekwh.js?_${date.systemTime}"></script>
+</body>
+</html>

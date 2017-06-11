@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<!-- 数据库   -->
+	<entry key="jdbc.url">jdbc:mysql://localhost:3306/school?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull</entry>
+	<entry key="jdbc.username">root</entry>
+	<entry key="jdbc.password">db123</entry>
+	<entry key="jdbc.show_sql">true</entry>
+	 
+	<!-- redis数据库 -->
+	<entry key="redis.host">192.168.88.40</entry>
+	<entry key="redis.port">6379</entry>
+	<entry key="redis.pass"></entry>
+	<entry key="redis.dbIndex">10</entry>
+	<entry key="redis.timeout">36000</entry>
+	<entry key="session.timeout">36000</entry>
+	
+	<!--mongoDB连接配置  
+	<entry key="mongo.hostport">192.168.88.40:27017</entry>
+	<entry key="mongo.connectionsPerHost">8</entry>
+	<entry key="mongo.dbname">devDb</entry>
+	<entry key="mongo.threadsAllowedToBlockForConnectionMultiplier">4</entry>
+	<entry key="mongo.connectTimeout">1000</entry>
+	<entry key="mongo.maxWaitTime">1500</entry>
+	<entry key="mongo.autoConnectRetry">true</entry>
+	<entry key="mongo.socketKeepAlive">true</entry>
+	<entry key="mongo.socketTimeout">1500</entry>
+	<entry key="mongo.slaveOk">true</entry>  
+	 -->
+	<!-- 上传图片服务 -->
+	<entry key="img.url.base">http://localhost/images/</entry>
+	<!-- 上传文件服务 -->
+	<entry key="resource.url.base">http://localhost:8080/backend/</entry>
+	<!-- 文件地址路径 -->
+	<entry key="file.path">d:\\warmhome</entry>
+	<!-- 苹果推送证书 -->
+	<entry key="ios.push.product.flag">N</entry>
+
+	<!-- 极光消息推送 -->
+	<entry key="pns.appKey">9290b4da7c7516327b8205b8</entry>
+	<entry key="pns.masterSecret">8ade73f46550054c1fce64ce</entry>
+
+	<!-- 微信支付 -->
+	<entry key="wxpay.app_certDir">d:\\install\\wx_app</entry>
+	<entry key="wxpay.notify_url">http://oyhf521.vicp.net:8181/backend/ws/wxpay/payReply</entry>
+
+	<!-- 支付宝 -->
+	<entry key="ali.pay.certDir">d:\\install\\ali_app</entry>
+	<entry key="ali.pay.notifyUrl">http://oyhf521.vicp.net:8181/backend/ws/alipay/payReply</entry>
+
+	<!-- 威富通 -->
+	<entry key="wftpay.notifyUrl">http://oyhf521.vicp.net:8181/backend/ws/wftpay/payReply</entry>
+	<entry key="wftpay.wxnotifyUrl">http://oyhf521.vicp.net:8181/backend/ws/wftpay/wxPayReply</entry>
+	<entry key="wftpay.apiUrl">https://pay.swiftpass.cn/pay/gateway</entry>
+	
+	<!-- 微信公众号 -->
+	<entry key="wxMpPay.feeDirect">https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&amp;redirect_uri=http://test.51eaj.com/backend/ws/h5/weixin/login&amp;response_type=code&amp;scope=snsapi_userinfo&amp;state=STATE#wechat_redirect</entry>
+	<entry key="wxMpPay.notifyUrl">http://oyhf521.vicp.net:8181/backend/ws/h5/weixin/payReply</entry>
+	 </properties>

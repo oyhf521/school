@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.school.dao.RoomDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+	<resultMap type="io.school.entity.RoomEntity" id="roomMap">
+		<result property="id" column="id" />
+		<result property="buildingid" column="buildingId" />
+		<result property="name" column="name" />
+		<result property="code" column="code" />
+		<result property="remark" column="remark" />
+		<association property="building" javaType="io.school.entity.BuildingEntity">
+			<result property="id" column="building_id" />
+			<result property="name" column="building_name" />
+			<result property="code" column="building_code" />
+			<result property="adress" column="building_adress" />
+			<result property="remark" column="building_remark" />
+		</association>
+  		<association  property="device" javaType="io.school.entity.DeviceEntity">
+	        <result property="id" column="device_id"/>
+	        <result property="name" column="device_name"/>
+	        <result property="code" column="device_code"/>
+	        <result property="buildingid" column="device_buildingId"/>
+	        <result property="roomid" column="droomId"/>
+	        <result property="ruleid" column="ruleId"/>
+	        <result property="price" column="price"/>
+	        <result property="isover" column="isover"/>
+	        <result property="lateuse" column="lateuse"/>
+	        <result property="latetime" column="latetime"/>
+	        <result property="paraname" column="paraname"/>
+       		<result property="paracode" column="paracode"/>
+	        <result property="isdouble" column="isdouble"/>
+	        <result property="freeuse" column="freeuse"/>
+	        <result property="remarks" column="device_remarks"/>
+   		 </association>
+	</resultMap>
+	<!-- 使用别名 -->
+    <sql id="cloums">
+        r.id,r.name,r.buildingId,r.code,r.remark,b.id as building_id,b.name as building_name,b.code as building_code,b.adress as building_adress,
+        b.remark as building_remark,d.id as device_id,d.name as device_name,d.code as device_code ,d.buildingid as device_buildingId,d.roomid,
+        d.ruleid,d.price,d.isover,d.lateuse,d.latetime,d.paraname,d.paracode,d.isdouble,d.freeuse,d.remarks as device_remarks
+    </sql>
+	<select id="queryObject" resultMap="roomMap">
+		select  <include refid="cloums"/> from room r left join device d on r.id=d.roomId left join building b on r.buildingid=b.id where r.id = #{value}
+	</select>
+	<select id="queryList" resultMap="roomMap">
+		select  <include refid="cloums"/> from room r left join device d on r.id=d.roomId left join building b on r.buildingid=b.id
+		<where>
+			<if test="name != null and name.trim() != ''">
+				and r.name like concat('%',#{name},'%') or r.code like concat('%',#{name},'%')
+			</if>
+			<if test="buildingid != null">
+				and r.buildingid = #{buildingid}
+			</if>
+		</where>
+		<choose>
+			<when test="sidx != null and sidx.trim() != ''">
+				order by r.${sidx} ${order}
+			</when>
+			<otherwise>
+				order by r.code asc
+			</otherwise>
+		</choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="queryTotal" resultType="int">
+		select count(*) from room
+		 <where>
+			<if test="name != null and name.trim() != ''">
+				and r.name like concat('%',#{name},'%') or r.code like concat('%',#{name},'%')
+			</if>
+			<if test="buildingid != null">
+				and r.buildingid = #{buildingid}
+			</if>
+		</where>
+	</select>
+
+	<insert id="save" parameterType="io.school.entity.RoomEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into
+		room
+		(
+		buildingId,
+		name,
+		code,
+		remark
+		)
+		values
+		(
+		#{buildingid},
+		#{name},
+		#{code},
+		#{remark}
+		)
+	</insert>
+
+	<update id="update" parameterType="io.school.entity.RoomEntity">
+		update room
+		<set>
+			<if test="buildingid != null">buildingId = #{buildingid}, </if>
+			<if test="name != null">name = #{name}, </if>
+			<if test="code != null">code = #{code}, </if>
+			<if test="remark != null">remark = #{remark}</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<delete id="delete">
+		delete from room where id = #{value}
+	</delete>
+
+	<delete id="deleteBatch">
+		delete from room where id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	 
+
+
+</mapper>

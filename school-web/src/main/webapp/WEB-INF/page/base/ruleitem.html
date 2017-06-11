@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>用电规则明细</title>
+#parse("sys/header.html")
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+			<a class="btn btn-warning" @click="reBack"><i class="fa fa-arrow-left"></i>&nbsp;返回</a>
+			<label style="color: red">温馨提示：点击“上限功率”可以直接修改</label>
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+    
+    <div v-show="!showList" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+											<div class="form-group">
+			   	<div class="col-sm-2 control-label">用电规则ID</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="ruleitem.ruleid" placeholder="用电规则ID"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">日期类型:正常日，休息日</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="ruleitem.datetype" placeholder="日期类型:正常日，休息日"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">时段序号</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="ruleitem.orderno" placeholder="时段序号"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">时段</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="ruleitem.ruletime" placeholder="时段"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">上限功率</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="ruleitem.maxkw" placeholder="上限功率"/>
+			    </div>
+			</div>
+							<div class="form-group">
+				<div class="col-sm-2 control-label"></div> 
+				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script src="${rc.contextPath}/js/base/ruleitem.js?_${date.systemTime}"></script>
+</body>
+</html>

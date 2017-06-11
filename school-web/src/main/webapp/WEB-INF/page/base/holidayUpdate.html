@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>节假日</title> #parse("sys/header.html")
+<!-- <link href='${rc.contextPath}/statics/libs/fullcalendar/fullcalendar.css' rel='stylesheet' />
+<link href='${rc.contextPath}/statics/libs/fullcalendar/fullcalendar.print.css' rel='stylesheet' media='print' />
+<script src='${rc.contextPath}/statics/libs/fullcalendar/moment.min.js'></script>
+<script src='${rc.contextPath}/statics/libs/fullcalendar/fullcalendar.js'></script>
+ -->
+<link href='${rc.contextPath}/statics/libs/fullcalendar-3.4.0/fullcalendar.min.css' rel='stylesheet' />
+<link href='${rc.contextPath}/statics/libs/fullcalendar-3.4.0/fullcalendar.print.min.css' rel='stylesheet' media='print' />
+<script src='${rc.contextPath}/statics/libs/fullcalendar-3.4.0/lib/moment.min.js'></script>
+<script src="${rc.contextPath}/statics/libs/fullcalendar-3.4.0/fullcalendar.min.js"></script>
+<script src="${rc.contextPath}/statics/libs/fullcalendar-3.4.0/locale/zh-cn.js"></script>
+<script>
+	$(document).ready(function()
+	{
+		var initialLocaleCode = 'zh-cn';
+		$('#calendar').fullCalendar(
+		{
+			header :
+			{
+				left : 'today prev next',
+				center : 'title',
+				right : 'month'
+			},
+			defaultDate : '${defaultDate}',
+			events : function(start, end, timezone, callback)
+			{
+				//console.log(end._i);
+				$.ajax(
+				{
+					type : "post",
+					url : "../holiday/getDataList?defaultDate=${defaultDate}",
+					dataType : "json",
+					success : function(data)
+					{
+						var event = [];
+						$.each(data, function(i)
+						{
+							event.push(
+							{
+								title : data[i].title,
+								start : data[i].start,
+								url : data[i].url,
+								color : data[i].color,
+								editable : false
+							});
+						});
+						callback(event);
+					}
+				});
+			},
+			selectable : true,
+			selectHelper : true,
+	 		eventRender : function(event, element)
+			{
+				element.html(event.title);
+			},  
+			eventClick: function(calEvent, jsEvent, view) 
+			{
+			/* 	var workDate =$.fullCalendar.formatDate(calEvent.start,'yyyy-MM-dd'); 
+				console.log(calEvent);
+				console.log(workDate);
+				layer.open({
+				    type: 2,
+				    offset: ['100px', '300px'],
+				    area: ['200px', '200px'],
+				    fixed: false, //不固定
+				    shadeClose: false, //开启遮罩关闭
+				    id: "goHolidaySet", //开启遮罩关闭
+				    maxmin: false,
+					title: [
+						  	 "修改工作日"　
+					       ],
+				    content: "../holiday/goHolidaySet?date="+workDate
+				  }); */
+			
+			},
+			dayClick : function(date, jsEvent, view)
+			{
+				layer.open({
+				    type: 2,
+				    offset: ['100px', '300px'],
+				    area: ['200px', '200px'],
+				    fixed: false, //不固定
+				    shadeClose: false, //开启遮罩关闭
+				    id: "goHolidaySet", //开启遮罩关闭
+				    maxmin: false,
+					title: [
+						  	 "修改工作日"　
+					       ],
+				    content: "../holiday/goHolidaySet?date="+date.format()
+				  });
+			},
+			eventLimit : true
+		})
+	 
+	});
+	
+	
+	function refetch()
+	{
+		 console.log('返回 ');
+		$('#calendar').fullCalendar('refetchEvents');
+	}
+	
+	function goBack()
+	{
+		location.href ="${rc.contextPath}/base/holiday.html";
+	}
+</script>
+<style>
+#calendar {
+	max-width: 700px;
+	margin: 1 auto;
+}
+</style>
+</head>
+<body>
+	<div class="grid-btn">
+	 	<a class="btn btn-warning" onclick="goBack()"><i class="fa fa-arrow-left"></i>&nbsp;返回</a>
+	</div>
+	<div id="main" style="width:680px">
+		<h2 class="top_title" style="text-align: center;">节假日与工作日设置</h2>
+		<div id='calendar'></div>
+	</div>
+	<script src="${rc.contextPath}/js/base/holiday.js?_${date.systemTime}"></script>
+</body>
+</html>
