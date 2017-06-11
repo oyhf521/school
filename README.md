@@ -54,30 +54,8 @@ school-security
 **如何交流、反馈、参与贡献？** 
 - 项目主页：http://www.school.io/open/
 - 开发文档：http://www.school.io/open/doc.html
-- oschina仓库：http://git.oschina.net/babaio/school-security
-- github仓库：https://github.com/sunlightcs/school-security
+- github仓库：https://github.com/oyhf521/school
 - [编程入门教程](http://www.school.io)：http://www.school.io   
-- 官方QQ群：324780204、145799952
-- 如需关注项目最新动态，请Watch、Star项目，同时也是对项目最好的支持
-- 技术讨论、二次开发等咨询、问题和建议，请移步到QQ群324780204、145799952，我会在第一时间进行解答和回复！
-
-**Layui主题风格：**
-![输入图片说明](http://cdn.school.io/img/2f6a43b9081e421ab8aa596155cd0ffc "在这里输入图片标题")
-
-**AdminLTE主题风格：**
-![输入图片说明](http://cdn.school.io/img/44907148dd254064922a80cfddcc9b53 "在这里输入图片标题")
-![输入图片说明](http://cdn.school.io/img/f38a062145b141bf81157b495277d224 "在这里输入图片标题")
-![输入图片说明](http://cdn.school.io/img/65d7fb1906934e56abf8b8ca7e1c4541 "在这里输入图片标题")
-![输入图片说明](http://cdn.school.io/img/de740e471280429cb888f521e02ee787 "在这里输入图片标题")
-![输入图片说明](http://cdn.school.io/img/a8bc68f69288424697682f170ee40744 "在这里输入图片标题")
-![输入图片说明](http://cdn.school.io/img/92cd56f397754292a1a182f662a7e883 "在这里输入图片标题")
-![输入图片说明](http://cdn.school.io/img/0b56efe56fd64ed18e33a9e6dbb6e88c "在这里输入图片标题")
-
-
-
-
-
-
 
  **技术选型：** 
 - 核心框架：Spring Framework 4.3
@@ -105,11 +83,6 @@ school-security
 - 修改db.properties文件，更新MySQL账号和密码
 - Eclipse、IDEA执行【clean package tomcat7:run】命令，即可运行项目
 - 项目访问路径：http://localhost
-- 非Maven方式启动，则默认访问路径为：http://localhost:8080/school-security
+- 非Maven方式启动，则默认访问路径为：http://localhost:8080/school
 - 账号密码：admin/admin
-
-
-**项目打赏** 
-
-如果您觉得作者的权限系统能帮助到您，您可以打赏作者一瓶汽水
-![输入图片说明](http://cdn.school.io/img/10e0f63b327d4e7ab9113e7b9568381a "在这里输入图片标题")
+ 
